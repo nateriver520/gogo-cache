@@ -1,7 +1,7 @@
 package cache
 
 import (
-	//"gogo-cache/cache"
+	"gogo-cache/algorithm"
 	"gogo-cache/link"
 	"time"
 )
@@ -43,7 +43,7 @@ func (cache *Cache) Set(key string, value interface{}, expire time.Duration) {
 
 func New_Cache(algName string, maxCount int64) *Cache {
 	var q Queue
-	LURQueue := New_LRU(maxCount)
+	LURQueue := algorithm.New_LRU(maxCount)
 
 	switch algName {
 	case "LUR":
