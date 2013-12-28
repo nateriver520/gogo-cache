@@ -26,6 +26,10 @@ func (q *LRUQueue) Update(node *link.Node) {
 	q.queue.MoveHead(node)
 }
 
+func (q *LRUQueue) Clear() {
+	q.queue.Clear()
+}
+
 func (q *LRUQueue) Print() {
 	q.queue.Print()
 }

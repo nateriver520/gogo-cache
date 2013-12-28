@@ -21,8 +21,8 @@ func Test_Basic_Cache(t *testing.T) {
 	for index = 0; index < size; index++ {
 		key := "key_" + strconv.Itoa(index)
 		value := "value_" + strconv.Itoa(index)
-		cacheLFU.Set(key, value, 20*time.Millisecond)
-		cacheLRU.Set(key, value, 20*time.Millisecond)
+		cacheLFU.Set(key, value, 20*time.Minute)
+		cacheLRU.Set(key, value, 20*time.Minute)
 
 	}
 
@@ -36,4 +36,6 @@ func Test_Basic_Cache(t *testing.T) {
 		}
 	}
 
+	defer cacheLFU.Clear()
+	defer cacheLRU.Clear()
 }

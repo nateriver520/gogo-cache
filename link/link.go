@@ -43,30 +43,38 @@ func (link *Link) Del(node *Node) {
 	link.Length--
 
 	if preNode != nil && nextNode == nil {
-		fmt.Println("tail node")
+		//tail node
 		link.tail = preNode
 		preNode = node.Next
 
 	} else if preNode != nil && nextNode != nil {
-		fmt.Println("middle node")
+		//middle node
 		preNode.Next = nextNode
 		nextNode.Pre = preNode
 
 	} else if preNode == nil && nextNode != nil {
-		fmt.Println("first node")
+		//first node
 		link.head = nextNode
 		nextNode.Pre = nil
 
 	} else if preNode == nil && nextNode == nil {
-		fmt.Println("only one node")
+		//only one node
 		link.head = nil
 		link.tail = nil
 	}
 
+	node = nil
 }
 
 //clear link
-func (link *Link) clear() {
+func (link *Link) Clear() {
+	node := link.head
+
+	for node != nil {
+		node = node.Next
+		node = nil
+	}
+
 	link.Length = 0
 	link.tail = nil
 	link.head = nil
@@ -312,6 +320,8 @@ func New_Node(key string, value interface{}, expire time.Duration) Node {
 	if expire > 0 {
 		t := time.Now().Add(expire)
 		e = &t
+	} else {
+		e = nil
 	}
 
 	return Node{

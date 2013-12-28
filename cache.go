@@ -11,6 +11,7 @@ type Queue interface {
 	Insert(node link.Node) *link.Node
 	Update(node *link.Node)
 	Del(node *link.Node)
+	Clear()
 }
 
 type Cache struct {
@@ -23,6 +24,7 @@ type Cache struct {
 func (cache *Cache) Set(key string, value interface{}, expire time.Duration) {
 	cache.Lock()
 	defer cache.Unlock()
+
 	nodeMap := cache.nodeMap
 	queue := cache.queue
 	newNode := link.New_Node(key, value, expire)
@@ -59,6 +61,14 @@ func (cache *Cache) Get(key string) interface{} {
 	queue.Update(node)
 	return node.Value
 
+}
+
+func (cache *Cache) Clear() {
+	cache.Lock()
+	defer cache.Unlock()
+
+	cache.queue.Clear()
+	cache.nodeMap = map[string]*link.Node{}
 }
 
 func New(algName string, maxCount int64) *Cache {

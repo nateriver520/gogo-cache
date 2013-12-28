@@ -43,6 +43,10 @@ func (q *LFUQueue) Update(node *link.Node) {
 	}
 }
 
+func (q *LFUQueue) Clear() {
+	q.queue.Clear()
+}
+
 func (q *LFUQueue) Print() {
 	q.queue.Print()
 }

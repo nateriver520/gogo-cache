@@ -26,11 +26,14 @@ import (
   "github.com/nateriver520/gogo-cache"
 )
 
-cache := New("LRU", size) // currently you can choose LFU and LRU
+cache := cache.New("LRU", size) // currently you can choose LFU and LRU
 
 cache.Set(key, value, 20*time.Millisecond) //set expire time
 
 value := cache.Get(key) // get value from cache
+
+cache.clear() // clear cache
+
 
 ```
 
