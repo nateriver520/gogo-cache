@@ -11,10 +11,9 @@ type LRUQueue struct {
 	queue   link.Link
 }
 
-func (q *LRUQueue) Insert(key string) {
+func (q *LRUQueue) Insert(node link.Node) *link.Node {
 	fmt.Printf("this is insert function\n")
-	node := link.New_Node(key)
-	q.queue.Push(node)
+	return q.queue.Push(node)
 }
 
 func (q *LRUQueue) Del(node link.Node) {

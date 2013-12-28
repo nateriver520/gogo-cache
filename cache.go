@@ -6,55 +6,71 @@ import (
 	"time"
 )
 
-type Item struct {
-	key    string
-	value  interface{}
-	expire time.Duration
-}
-
 type Queue interface {
-	Insert(key string)
-	Update(node link.Node)
-	Del(node link.Node)
+	Insert(node link.Node) *link.Node
+	Update(node *link.Node)
+	Del(node *link.Node)
 }
 
 type Cache struct {
 	maxCount int64
-	itemMap  map[string]*Item
+	nodeMap  map[string]*link.Node
 	queue    Queue
 }
 
 func (cache *Cache) Set(key string, value interface{}, expire time.Duration) {
-	itemMap := cache.itemMap
+	nodeMap := cache.nodeMap
 	queue := cache.queue
+	newNode := link.New_Node(key, value, expire)
 
-	_, ok := itemMap[key]
+	node, ok := nodeMap[key]
 
 	if ok {
-
-		itemMap[key] = &Item{key, value, expire}
-
+		node.Value = newNode.Value
+		node.Expire = newNode.Expire
 	} else {
-		queue.Insert(key)
-		itemMap[key] = &Item{key, value, expire}
+		inserNode := queue.Insert(newNode)
+		nodeMap[key] = inserNode
 	}
+}
+
+func (cache *Cache) get(key string) interface{} {
+	nodeMap := cache.nodeMap
+	queue := cache.queue
+
+	node, ok := nodeMap[key]
+
+	if !ok {
+		return nil
+	}
+
+	if node.Expired() {
+		queue.Del(node)
+		return nil
+	}
+
+	queue.Update(node)
+	return node.Value
 
 }
 
 func New_Cache(algName string, maxCount int64) *Cache {
 	var q Queue
-	LURQueue := algorithm.New_LRU(maxCount)
+	//LURQueue := algorithm.New_LRU(maxCount)
+	LFUQueue := algorithm.New_LFU(maxCount)
 
 	switch algName {
 	case "LUR":
-		q = LURQueue
+		q = LFUQueue
+	case "LFU":
+		q = LFUQueue
 	default:
-		q = LURQueue
+		q = LFUQueue
 	}
 
 	return &Cache{
 		maxCount: maxCount,
-		itemMap:  make(map[string]*Item),
+		nodeMap:  make(map[string]*link.Node),
 		queue:    q,
 	}
 }
