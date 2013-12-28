@@ -3,6 +3,7 @@ package cache
 import (
 	"gogo-cache/algorithm"
 	"gogo-cache/link"
+	"sync"
 	"time"
 )
 
@@ -13,12 +14,15 @@ type Queue interface {
 }
 
 type Cache struct {
+	sync.Mutex
 	maxCount int64
 	nodeMap  map[string]*link.Node
 	queue    Queue
 }
 
 func (cache *Cache) Set(key string, value interface{}, expire time.Duration) {
+	cache.Lock()
+	defer cache.Unlock()
 	nodeMap := cache.nodeMap
 	queue := cache.queue
 	newNode := link.New_Node(key, value, expire)
@@ -34,7 +38,10 @@ func (cache *Cache) Set(key string, value interface{}, expire time.Duration) {
 	}
 }
 
-func (cache *Cache) get(key string) interface{} {
+func (cache *Cache) Get(key string) interface{} {
+	cache.Lock()
+	defer cache.Unlock()
+
 	nodeMap := cache.nodeMap
 	queue := cache.queue
 

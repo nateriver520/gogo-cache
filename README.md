@@ -8,15 +8,15 @@ gogo-cache is a cache package, can suppot LRU and LFU algorithm. And more algori
 The architecture of this project is base on this project [Node-Simple-Cache](https://github.com/hh54188/Node-Simple-Cache) 
 
 
-#How ?
+##How ?
 
-##Install
+###Install
 
 ```shell
 go get github.com/nateriver520/gogo-cache
 ```
 
-##Sample
+###Sample
 
 ```go
 
@@ -24,7 +24,7 @@ cache := New("LRU", size) // currently you can choose LFU and LRU
 
 cache.Set(key, value, 20*time.Millisecond) //set expire time
 
-value := cache.get(key) // get value from cache
+value := cache.Get(key) // get value from cache
 
 ```
 

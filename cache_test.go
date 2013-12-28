@@ -28,8 +28,8 @@ func Test_Basic_Cache(t *testing.T) {
 
 	for index = 0; index < size; index++ {
 		key := "key_" + strconv.Itoa(index)
-		value1 := cacheLFU.get(key)
-		value2 := cacheLRU.get(key)
+		value1 := cacheLFU.Get(key)
+		value2 := cacheLRU.Get(key)
 
 		if value1 == nil && value2 == nil {
 			t.Error("every key should be match in the cache, not match key is %v", key)
