@@ -47,6 +47,10 @@ func (q *LFUQueue) Clear() {
 	q.queue.Clear()
 }
 
+func (q *LFUQueue) Equal(keys []string) bool {
+	return q.queue.Equal(keys)
+}
+
 func (q *LFUQueue) Print() {
 	q.queue.Print()
 }

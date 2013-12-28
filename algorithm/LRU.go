@@ -34,6 +34,10 @@ func (q *LRUQueue) Print() {
 	q.queue.Print()
 }
 
+func (q *LRUQueue) Equal(keys []string) bool {
+	return q.queue.Equal(keys)
+}
+
 func New_LRU(size int64) *LRUQueue {
 	q := link.New_Link()
 	return &LRUQueue{

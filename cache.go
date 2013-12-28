@@ -75,12 +75,15 @@ func New(algName string, maxCount int64) *Cache {
 	var q Queue
 	LURQueue := algorithm.New_LRU(maxCount)
 	LFUQueue := algorithm.New_LFU(maxCount)
+	FIFOQueue := algorithm.New_LFU(maxCount)
 
 	switch algName {
 	case "LUR":
 		q = LURQueue
 	case "LFU":
 		q = LFUQueue
+	case "FIFO":
+		q = FIFOQueue
 	default:
 		q = LFUQueue
 	}

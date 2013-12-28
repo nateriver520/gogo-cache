@@ -276,6 +276,26 @@ func (link *Link) Print() {
 	}
 }
 
+// equal keys use for debug
+// input keys like ["a","b","c"]
+func (link *Link) Equal(keys []string) bool {
+	head, index := link.head, 0
+
+	for head != nil {
+		if index >= len(keys) || keys[index] != head.Key {
+			return false
+		}
+
+		index++
+		head = head.Next
+	}
+
+	if index != len(keys) {
+		return false
+	}
+	return true
+}
+
 // Returns true if the item has expired.
 func (node *Node) Expired() bool {
 	if node.Expire == nil {
