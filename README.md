@@ -42,10 +42,10 @@ func main() {
 
 ```
 
-### Todo List
+## Todo List
 
-- add more test case
+- add more test cases
 - add more cache function
-- bench mark with redis, memcached
+- bench mark vs redis, memcached
 - add funtion for regular garbage collection
 - save cache to local (Maybe?) 
