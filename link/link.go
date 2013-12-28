@@ -14,12 +14,14 @@ type Node struct {
 	Expire *time.Time
 }
 
+//link will be a two-way link like this a <-> b <-> c
 type Link struct {
 	Length int64
 	head   *Node
 	tail   *Node
 }
 
+//insert a node to link head
 func (link *Link) Unshift(node Node) *Node {
 	if link.tail == nil {
 		link.head = &node
@@ -34,6 +36,7 @@ func (link *Link) Unshift(node Node) *Node {
 	return &node
 }
 
+//del node from link
 func (link *Link) Del(node *Node) {
 	preNode := node.Pre
 	nextNode := node.Next
@@ -62,11 +65,14 @@ func (link *Link) Del(node *Node) {
 
 }
 
+//clear link
 func (link *Link) clear() {
+	link.Length = 0
 	link.tail = nil
 	link.head = nil
 }
 
+//push a node
 func (link *Link) Push(node Node) *Node {
 	link.Length++
 	if link.tail == nil {
@@ -81,6 +87,7 @@ func (link *Link) Push(node Node) *Node {
 	return &node
 }
 
+// pop a node
 func (link *Link) Pop() *Node {
 	link.Length--
 	curNote := link.tail
@@ -95,6 +102,9 @@ func (link *Link) Pop() *Node {
 	return curNote
 }
 
+// link like this a -> b -> c -> d
+// Forward(a) should nothing happened
+// Forward(b) should like b -> a -> c -> d
 func (link *Link) Forward(node *Node) {
 	preNode := node.Pre
 	nextNode := node.Next
@@ -125,6 +135,7 @@ func (link *Link) Forward(node *Node) {
 			link.head = node
 		}
 	} else {
+		// should be tail
 		prepreNode := preNode.Pre
 
 		if nextNode == nil {
@@ -152,6 +163,9 @@ func (link *Link) Forward(node *Node) {
 	}
 }
 
+// link like this a -> b -> c -> d
+// Backward(d) should nothing happened
+// Backward(b) should like a -> c -> b -> d
 func (link *Link) Backward(node *Node) {
 	preNode := node.Pre
 	nextNode := node.Next
@@ -210,6 +224,50 @@ func (link *Link) Backward(node *Node) {
 	}
 }
 
+// move a node to the head
+// a -> b -> c, MoveHead(b)
+// c -> a - > b
+func (link *Link) MoveHead(node *Node) {
+	preNode := node.Pre
+	nextNode := node.Next
+
+	// if node in the tail
+	if preNode != nil && nextNode == nil {
+
+		link.tail = preNode
+		preNode.Next = node.Next
+
+		node.Next = link.head
+		link.head.Pre = node
+
+		link.head = node
+		node.Pre = nil
+
+	} else if preNode != nil && nextNode != nil {
+		//node in the middle
+		preNode.Next = nextNode
+		nextNode.Pre = preNode
+
+		node.Next = link.head
+		node.Pre = nil
+		link.head.Pre = node
+
+		link.head = node
+
+	}
+}
+
+// print link, use for debug
+func (link *Link) Print() {
+	head := link.head
+
+	fmt.Printf("link's head key is %v and tail key is %v link lenghth is %d \n", link.head.Key, link.tail.Key, link.Length)
+	for head != nil {
+		head.Print()
+		head = head.Next
+	}
+}
+
 // Returns true if the item has expired.
 func (node *Node) Expired() bool {
 	if node.Expire == nil {
@@ -218,22 +276,33 @@ func (node *Node) Expired() bool {
 	return node.Expire.Before(time.Now())
 }
 
-func (link *Link) Print() {
-	head := link.head
-	fmt.Printf("link lenghth is %d \n", link.Length)
-	for head != nil {
-		head.Print()
-		head = head.Next
-	}
-}
-
 func (node *Node) Print() {
-	fmt.Printf("node's key is %v value is %v \n", node.Key, node.Value)
+	fmt.Printf("node's key is %v value is %v and count is %v ", node.Key, node.Value, node.Count)
+
+	var (
+		pre  string
+		next string
+	)
+
+	if node.Pre == nil {
+		pre = "none"
+	} else {
+		pre = node.Pre.Key
+	}
+
+	if node.Next == nil {
+		next = "none"
+	} else {
+		next = node.Next.Key
+	}
+
+	fmt.Printf("node's pre node key  is %v and next key is %v \n", pre, next)
+
 }
 
-func New_Link() Link {
+func New_Link() *Link {
 	link := Link{0, nil, nil}
-	return link
+	return &link
 }
 
 func New_Node(key string, value interface{}, expire time.Duration) Node {

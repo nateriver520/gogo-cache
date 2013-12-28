@@ -6,13 +6,12 @@ import (
 
 type LFUQueue struct {
 	maxSize int64
-	length  int64
-	queue   link.Link
+	queue   *link.Link
 }
 
 func (q *LFUQueue) Insert(node link.Node) *link.Node {
 
-	if q.queue.Length > q.maxSize {
+	for q.queue.Length >= q.maxSize {
 		q.queue.Pop()
 	}
 
@@ -32,7 +31,7 @@ func (q *LFUQueue) Update(node *link.Node) {
 	queue := q.queue
 
 	if preNode != nil && preNode.Count < node.Count {
-		for preNode != nil && preNode.Count < node.Count {
+		for preNode != nil && preNode.Count < node.Count { //Todo: should think about when count are same, should think about expire time
 			queue.Forward(node)
 			preNode = node.Pre
 		}
@@ -44,11 +43,14 @@ func (q *LFUQueue) Update(node *link.Node) {
 	}
 }
 
+func (q *LFUQueue) Print() {
+	q.queue.Print()
+}
+
 func New_LFU(size int64) *LFUQueue {
 	q := link.New_Link()
 	return &LFUQueue{
 		maxSize: size,
-		length:  0,
 		queue:   q,
 	}
 }

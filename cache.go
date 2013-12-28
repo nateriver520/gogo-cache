@@ -54,14 +54,14 @@ func (cache *Cache) get(key string) interface{} {
 
 }
 
-func New_Cache(algName string, maxCount int64) *Cache {
+func New(algName string, maxCount int64) *Cache {
 	var q Queue
-	//LURQueue := algorithm.New_LRU(maxCount)
+	LURQueue := algorithm.New_LRU(maxCount)
 	LFUQueue := algorithm.New_LFU(maxCount)
 
 	switch algName {
 	case "LUR":
-		q = LFUQueue
+		q = LURQueue
 	case "LFU":
 		q = LFUQueue
 	default:
