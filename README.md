@@ -3,7 +3,9 @@ gogo-cache
 
 ## What?
 
-gogo-cache is a cache package, can suppot LRU and LFU algorithm. And more algorithm will on the way :)
+gogo-cache is an in-memory key:value store/cache similar to memcached 
+
+It can support LRU and LRU. In the future, we will support more :)
 
 The architecture of this project is base on this project [Node-Simple-Cache](https://github.com/hh54188/Node-Simple-Cache) 
 
@@ -19,6 +21,10 @@ go get github.com/nateriver520/gogo-cache
 ###Sample
 
 ```go
+
+import (
+  "github.com/nateriver520/gogo-cache"
+)
 
 cache := New("LRU", size) // currently you can choose LFU and LRU
 
