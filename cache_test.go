@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
+	"time"
 )
 
 func Test_Basic_Cache(t *testing.T) {
@@ -40,4 +41,41 @@ func Test_Basic_Cache(t *testing.T) {
 	defer cacheLFU.Clear()
 	defer cacheLRU.Clear()
 	defer cacheFIFO.Clear()
+}
+
+func Test_Del_Expire_Length(t *testing.T) {
+	fmt.Println("[Test] del expire count")
+
+	cache := New("LFU", 100)
+	cache.Set("10s_key", "value", time.Second*10)
+
+	if cache.Get("10s_key") == nil {
+		t.Error("we should get the key")
+	}
+
+	time.Sleep(time.Second * 10)
+
+	if cache.Get("10s_key") != nil {
+		t.Error("this key should expire")
+	}
+
+	cache.Set("10s_key", "value", -1)
+
+	if cache.Get("10s_key") == nil {
+		t.Error("we should get the key")
+	}
+
+	cache.Del("10s_key")
+
+	if cache.Get("10s_key") != nil {
+		t.Error("we should del the key")
+	}
+
+	cache.Set("10s_key_1", "value", -1)
+	cache.Set("10s_key", "value", -1)
+
+	if cache.Count() != 2 {
+		t.Error("cache's count should be 2")
+	}
+
 }

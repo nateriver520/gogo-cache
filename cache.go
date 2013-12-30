@@ -21,6 +21,8 @@ type Cache struct {
 	queue    Queue
 }
 
+//insert an item to the cache, replacing any existing item
+//If the expire <= 0, the item will never expires
 func (cache *Cache) Set(key string, value interface{}, expire time.Duration) {
 	cache.Lock()
 	defer cache.Unlock()
@@ -40,6 +42,7 @@ func (cache *Cache) Set(key string, value interface{}, expire time.Duration) {
 	}
 }
 
+//Get an item from the cache. Returns the item or nil
 func (cache *Cache) Get(key string) interface{} {
 	cache.Lock()
 	defer cache.Unlock()
@@ -55,6 +58,7 @@ func (cache *Cache) Get(key string) interface{} {
 
 	if node.Expired() {
 		queue.Del(node)
+		delete(nodeMap, key)
 		return nil
 	}
 
@@ -63,12 +67,41 @@ func (cache *Cache) Get(key string) interface{} {
 
 }
 
+// Delete an item from the cache. Does nothing if the key is not in the cache.
+func (cache *Cache) Del(key string) {
+	cache.Lock()
+	defer cache.Unlock()
+
+	nodeMap := cache.nodeMap
+	queue := cache.queue
+
+	node, ok := nodeMap[key]
+
+	if !ok {
+		return
+	}
+
+	queue.Del(node)
+	delete(nodeMap, key)
+
+}
+
+//delete all items from cache
 func (cache *Cache) Clear() {
 	cache.Lock()
 	defer cache.Unlock()
 
 	cache.queue.Clear()
 	cache.nodeMap = map[string]*link.Node{}
+}
+
+//Returns the number of items in the cache.
+//This may include items that have expired, but have not yet been cleaned up
+func (cache *Cache) Count() int64 {
+	cache.Lock()
+	defer cache.Unlock()
+
+	return int64(len(cache.nodeMap))
 }
 
 func New(algName string, maxCount int64) *Cache {
