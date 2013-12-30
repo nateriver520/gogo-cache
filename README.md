@@ -5,12 +5,14 @@ gogo-cache
 
 gogo-cache is an in-memory key:value store/cache similar to memcached 
 
-It can support LRU ,LRU and FIFO . In the future, we will support more :)
+It supports LRU ,LRU and FIFO. 
 
-The architecture of this project is base on this project [Node-Simple-Cache](https://github.com/hh54188/Node-Simple-Cache) 
+In the future, I will support more :)
+
+The architecture of this project is based on the project [Node-Simple-Cache](https://github.com/hh54188/Node-Simple-Cache) 
 
 
-##How ?
+##How?
 
 ###Install
 
@@ -18,7 +20,7 @@ The architecture of this project is base on this project [Node-Simple-Cache](htt
 go get github.com/nateriver520/gogo-cache
 ```
 
-###Sample
+###Example
 
 ```go
 package main
@@ -38,14 +40,28 @@ func main() {
   defer cache.clear() // clear cache
 
 }
-
-
 ```
+
+## APIs
+
+- **Set**(key string, value interface{}, expire time.Duration)
+  - insert an item to the cache, replacing any existing item
+  - If the expire <= 0, the item will never expires
+- **Get**(key string) interface{}
+   - Get an item from the cache. Returns the item or nil
+- **Del**(key string) 
+  - Delete an item from the cache. Does nothing if the key is not in the cache.
+- **Clear**()
+  - delete all items from cache
+- **Count**() int64
+  - Returns the number of items in the cache
+  - This may include items that have expired, but have not yet been cleaned up
+
+
 
 ## Todo List
 
 - add more test cases
 - add more cache function
-- bench mark vs redis, memcached
 - add funtion for regular garbage collection
 - save cache to local (Maybe?) 

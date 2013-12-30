@@ -31,7 +31,7 @@ func (q *LFUQueue) Update(node *link.Node) {
 	queue := q.queue
 
 	if preNode != nil && preNode.Count < node.Count {
-		for preNode != nil && preNode.Count < node.Count { //Todo: should think about when count are same, should think about expire time
+		for preNode != nil && preNode.Count < node.Count { //Todo: should think about when count are same, expire time will rank
 			queue.Forward(node)
 			preNode = node.Pre
 		}
