@@ -58,6 +58,9 @@ func main() {
   - This may include items that have expired, but have not yet been cleaned up
 
 
+## LICENSE
+
+gogo-cache is licensed under the Apache Licence, [Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 ## Todo List
 
