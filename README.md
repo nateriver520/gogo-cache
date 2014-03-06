@@ -5,7 +5,7 @@ gogo-cache
 
 gogo-cache is an in-memory key:value store/cache similar to memcached 
 
-It supports LRU ,LRU and FIFO. 
+It supports LRU ,LFU and FIFO. 
 
 In the future, I will support more :)
 
@@ -62,9 +62,4 @@ func main() {
 
 gogo-cache is licensed under the Apache Licence, [Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
-## Todo List
 
-- add more test cases
-- add more cache function
-- add funtion for regular garbage collection
-- save cache to local (Maybe?) 
